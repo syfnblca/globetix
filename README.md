@@ -33,35 +33,6 @@ Aplikasi ini menyediakan fitur pemesanan tiket, manajemen jadwal, pembayaran, re
 
 ---
 
-## 🗂 Struktur Direktori
-
-globetix/
-├── admin/
-│ ├── assets/
-│ ├── includes/
-│ ├── bus.php
-│ ├── edit_bus.php
-│ ├── tambah_bus.php
-│ ├── refund.php
-│ ├── pemesanan.php
-│ ├── index_admin.php
-│ └── login.php
-│
-├── PHPMailer/
-├── uploads/
-├── autologin.php
-├── bantuan.php
-├── batalkan_pemesanan.php
-├── dashboard.php
-├── db.php
-├── detail_pemesanan.php
-├── hasil_pencarian.php
-├── pilih_kursi.php
-├── pembayaran.php
-├── profil.php
-├── riwayat.php
-├── ubah_password.php
-└── globetix.sql
 ## ⚙️ Modul Sistem
 
 ### 1️⃣ Modul Autentikasi
