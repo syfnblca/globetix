@@ -1,0 +1,148 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f7f9fb;
+  text-align: center;
+  margin: 0;
+}
+
+header {
+  background-color: #337a9c;
+  color: white;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo img { height: 45px; }
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin: 0 20px;
+  font-weight: 600;
+}
+
+.seat-container { 
+  margin-top: 40px; 
+  display: inline-block; 
+}
+
+.seat-row-label {
+  font-weight: bold;
+  margin: 10px 0 5px 0;
+  text-align: center;
+}
+
+.seat-row {
+  display: flex;
+  justify-content: center;
+  margin: 5px 0 15px 0;
+  gap: 5px; /* Close A B, far B C, close C D */
+}
+
+.seat-row .seat:nth-child(2) {
+  margin-right: 20px; /* Space after B */
+}
+
+.seat-row .seat:nth-child(3) {
+  margin-left: 20px; /* Space before C */
+}
+
+.seat {
+  width: 45px; height: 45px; margin: 5px;
+  border-radius: 6px; 
+  display: flex; justify-content: center;
+  align-items: center; 
+  color: white; font-weight: 500; 
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* ✅ STATUS WARNA KURSI */
+.seat.tersedia { 
+  background: black; 
+  color: white;
+}
+
+.seat.dipesan { 
+  background: #b0b0b0; /* abu-abu muda */
+  color: #444;
+  cursor: not-allowed;
+}
+
+.seat.locked { 
+  background: #5da9dd; /* biru muda */
+  color: white;
+  cursor: not-allowed;
+  box-shadow: 0 0 8px rgba(0, 140, 255, 0.5);
+}
+
+.seat.selected { 
+  background: orange !important; 
+  color: white;
+}
+
+/* ✅ Hover efek hanya untuk kursi yang bisa diklik */
+.seat.tersedia:hover { 
+  background: #333; 
+}
+
+/* ✅ LEGEND */
+.legend {
+  display: flex; 
+  justify-content: center; 
+  gap: 25px;
+  margin-top: 30px; 
+  align-items: center;
+}
+
+.box { 
+  width: 25px; height: 25px; 
+  border-radius: 4px; 
+  display: inline-block; 
+  border: 1px solid #ccc;
+}
+
+/* ✅ Warna pada legend */
+.box.abu { background: #b0b0b0; }   /* dipesan */
+.box.hitam { background: black; }   /* tersedia */
+.box.biru { background: #5da9dd; }  /* terkunci */
+
+/* ✅ Tombol pesanan */
+.btn-pesan {
+  margin-top: 40px; 
+  background: orange; 
+  color: white;
+  border: none; 
+  padding: 15px 35px; 
+  font-size: 18px;
+  border-radius: 40px; 
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-pesan:hover {
+  background: #e69500;
+}
+
+/* tambahan untuk kursi yang dipilih */
+/* tambahan untuk kursi yang dipilih */
+.seat.selected {
+  background: #ff8800 !important;
+  color: #fff !important;
+  border: 1px solid #e69500 !important;
+}
+
+/* step/tab small polish (if not already) */
+.steps .step { transition: all .18s ease; }
+.steps .step:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(8,40,60,0.06); }
+.steps .step.active { box-shadow: 0 8px 26px rgba(7,50,75,0.12); }
+
+/* legend colors fallback */
+.box.hitam { background:#000; }
+.box.biru { background:#cfe6ff; }
+.box.abu { background:#bfc6cc; }
+.box.orange { background:orange; }
+
+

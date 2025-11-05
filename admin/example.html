@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Pemesanan Bus</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-gray-50">
+  <div class="min-h-full"><!-- Header -->
+   <header class="gradient-bg shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="flex justify-between items-center py-6">
+      <div class="flex items-center">
+       <div class="flex-shrink-0">
+        <svg class="h-8 w-8 text-white" fill="none" viewbox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+       </div>
+       <div class="ml-4">
+        <h1 id="dashboard-title" class="text-2xl font-bold text-white">Dashboard Pemesanan Bus</h1>
+        <p id="company-name" class="text-blue-100">Globetix</p>
+       </div>
+      </div>
+      <div class="flex items-center space-x-4"><select id="timeFilter" class="bg-white bg-opacity-20 text-white border border-white border-opacity-30 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50"> <option value="7">7 Hari Terakhir</option> <option value="30" selected>30 Hari Terakhir</option> <option value="90">90 Hari Terakhir</option> <option value="365">1 Tahun Terakhir</option> </select> <button id="refreshBtn" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg transition-all duration-200">
+        <svg class="h-5 w-5" fill="none" viewbox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg></button>
+      </div>
+     </div>
+    </div>
+   </header><!-- Main Content -->
+   <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"><!-- Stats Cards -->
+    <div class="px-4 py-6 sm:px-0">
+     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8"><!-- Total Jadwal/Bus -->
+      <div class="bg-white overflow-hidden shadow-lg rounded-lg card-hover">
+       <div class="p-5">
+        <div class="flex items-center">
+         <div class="flex-shrink-0">
+          <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+           <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 20 20"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /> <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1V8a1 1 0 00-1-1h-3z" />
+           </svg>
+          </div>
+         </div>
+         <div class="ml-5 w-0 flex-1">
+          <dl>
+           <dt class="text-sm font-medium text-gray-500 truncate">
+            Total Jadwal/Bus
+           </dt>
+           <dd class="text-lg font-medium text-gray-900" id="totalSchedules">
+            45
+           </dd>
+          </dl>
+         </div>
+        </div>
+       </div>
+      </div><!-- Total Booking -->
+      <div class="bg-white overflow-hidden shadow-lg rounded-lg card-hover">
+       <div class="p-5">
+        <div class="flex items-center">
+         <div class="flex-shrink-0">
+          <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+           <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" />
+           </svg>
+          </div>
+         </div>
+         <div class="ml-5 w-0 flex-1">
+          <dl>
+           <dt class="text-sm font-medium text-gray-500 truncate">
+            Total Booking
+           </dt>
+           <dd class="text-lg font-medium text-gray-900" id="totalBookings">
+            1,247
+           </dd>
+          </dl>
+         </div>
+        </div>
+       </div>
+      </div><!-- Booking Dikonfirmasi -->
+      <div class="bg-white overflow-hidden shadow-lg rounded-lg card-hover">
+       <div class="p-5">
+        <div class="flex items-center">
+         <div class="flex-shrink-0">
+          <div class="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
+           <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+           </svg>
+          </div>
+         </div>
+         <div class="ml-5 w-0 flex-1">
+          <dl>
+           <dt class="text-sm font-medium text-gray-500 truncate">
+            Dikonfirmasi
+           </dt>
+           <dd class="text-lg font-medium text-gray-900" id="confirmedBookings">
+            1,089
+           </dd>
+          </dl>
+         </div>
+        </div>
+       </div>
+      </div><!-- Booking Dibatalkan -->
+      <div class="bg-white overflow-hidden shadow-lg rounded-lg card-hover">
+       <div class="p-5">
+        <div class="flex items-center">
+         <div class="flex-shrink-0">
+          <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+           <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+           </svg>
+          </div>
+         </div>
+         <div class="ml-5 w-0 flex-1">
+          <dl>
+           <dt class="text-sm font-medium text-gray-500 truncate">
+            Dibatalkan
+           </dt>
+           <dd class="text-lg font-medium text-gray-900" id="cancelledBookings">
+            158
+           </dd>
+          </dl>
+         </div>
+        </div>
+       </div>
+      </div><!-- Refund Pending -->
+      <div class="bg-white overflow-hidden shadow-lg rounded-lg card-hover">
+       <div class="p-5">
+        <div class="flex items-center">
+         <div class="flex-shrink-0">
+          <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+           <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+           </svg>
+          </div>
+         </div>
+         <div class="ml-5 w-0 flex-1">
+          <dl>
+           <dt class="text-sm font-medium text-gray-500 truncate">
+            Refund Pending
+           </dt>
+           <dd class="text-lg font-medium text-gray-900" id="pendingRefunds">
+            23
+           </dd>
+          </dl>
+         </div>
+        </div>
+       </div>
+      </div><!-- Total Pendapatan -->
+      <div class="bg-white overflow-hidden shadow-lg rounded-lg card-hover">
+       <div class="p-5">
+        <div class="flex items-center">
+         <div class="flex-shrink-0">
+          <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+           <svg class="w-5 h-5 text-white" fill="currentColor" viewbox="0 0 20 20"><path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" /> <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
+           </svg>
+          </div>
+         </div>
+         <div class="ml-5 w-0 flex-1">
+          <dl>
+           <dt class="text-sm font-medium text-gray-500 truncate">
+            Total Pendapatan
+           </dt>
+           <dd class="text-lg font-medium text-gray-900" id="totalRevenue">
+            Rp 2.847.500.000
+           </dd>
+          </dl>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Charts Section -->
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"><!-- Jadwal Populer -->
+      <div class="bg-white overflow-hidden shadow-lg rounded-lg">
+       <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Jadwal Populer</h3>
+       </div>
+       <div class="p-6">
+        <div class="chart-container">
+         <canvas id="popularSchedulesChart"></canvas>
+        </div>
+       </div>
+      </div><!-- Tren Booking -->
+      <div class="bg-white overflow-hidden shadow-lg rounded-lg">
+       <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Tren Booking</h3>
+       </div>
+       <div class="p-6">
+        <div class="chart-container">
+         <canvas id="bookingTrendChart"></canvas>
+        </div>
+       </div>
+      </div><!-- Status Booking -->
+      <div class="bg-white overflow-hidden shadow-lg rounded-lg">
+       <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Status Booking</h3>
+       </div>
+       <div class="p-6">
+        <div class="chart-container">
+         <canvas id="bookingStatusChart"></canvas>
+        </div>
+       </div>
+      </div><!-- Pengguna Baru -->
+      <div class="bg-white overflow-hidden shadow-lg rounded-lg">
+       <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Pengguna Baru</h3>
+       </div>
+       <div class="p-6">
+        <div class="chart-container">
+         <canvas id="newUsersChart"></canvas>
+        </div>
+       </div>
+      </div>
+     </div><!-- Revenue Chart -->
+     <div class="bg-white overflow-hidden shadow-lg rounded-lg mb-8">
+      <div class="px-6 py-4 border-b border-gray-200">
+       <h3 class="text-lg font-medium text-gray-900">Pendapatan Harian</h3>
+      </div>
+      <div class="p-6">
+       <div style="position: relative; height: 400px;">
+        <canvas id="revenueChart"></canvas>
+       </div>
+      </div>
+     </div><!-- Summary Report -->
+     <div class="bg-white overflow-hidden shadow-lg rounded-lg">
+      <div class="px-6 py-4 border-b border-gray-200">
+       <h3 class="text-lg font-medium text-gray-900">Ringkasan Laporan</h3>
+      </div>
+      <div class="p-6">
+       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="text-center">
+         <div class="text-3xl font-bold text-blue-600" id="avgBookingPerDay">
+          41.6
+         </div>
+         <div class="text-sm text-gray-500">
+          Rata-rata Booking/Hari
+         </div>
+        </div>
+        <div class="text-center">
+         <div class="text-3xl font-bold text-green-600" id="occupancyRate">
+          87.3%
+         </div>
+         <div class="text-sm text-gray-500">
+          Tingkat Okupansi
+         </div>
+        </div>
+        <div class="text-center">
+         <div class="text-3xl font-bold text-purple-600" id="avgRevenuePerBooking">
+          Rp 2.284.000
+         </div>
+         <div class="text-sm text-gray-500">
+          Rata-rata Pendapatan/Booking
+         </div>
+        </div>
+        <div class="text-center">
+         <div class="text-3xl font-bold text-orange-600" id="customerSatisfaction">
+          4.7/5
+         </div>
+         <div class="text-sm text-gray-500">
+          Kepuasan Pelanggan
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </main>
+  </div>
+  <script>
+        // Configuration object
+        const defaultConfig = {
+            dashboard_title: "Dashboard Pemesanan Bus",
+            company_name: "Globetix"
+        };
+
+        // Sample data for different periods
+        let dashboardData = {
+            30: {
+                totalSchedules: 45,
+                totalBookings: 1247,
+                confirmedBookings: 1089,
+                cancelledBookings: 158,
+                pendingRefunds: 23,
+                totalRevenue: 2847500000,
+                popularRoutes: ['Jakarta - Bandung', 'Jakarta - Yogyakarta', 'Surabaya - Malang', 'Bandung - Semarang', 'Jakarta - Solo'],
+                popularRoutesData: [245, 198, 167, 134, 112],
+                bookingTrend: [32, 45, 38, 52, 41, 48, 55, 43, 39, 47, 51, 44, 38, 42, 49, 53, 46, 41, 37, 45, 48, 52, 44, 39, 43, 47, 50, 45, 41, 46],
+                bookingStatus: [1089, 158, 23],
+                newUsers: [12, 18, 15, 22, 19, 25, 28, 21, 17, 20, 24, 19, 16, 18, 23, 26, 22, 19, 15, 21, 24, 27, 20, 17, 19, 22, 25, 21, 18, 20],
+                dailyRevenue: []
+            },
+            7: {
+                totalSchedules: 45,
+                totalBookings: 287,
+                confirmedBookings: 251,
+                cancelledBookings: 36,
+                pendingRefunds: 8,
+                totalRevenue: 653200000,
+                popularRoutes: ['Jakarta - Bandung', 'Jakarta - Yogyakarta', 'Surabaya - Malang', 'Bandung - Semarang', 'Jakarta - Solo'],
+                popularRoutesData: [58, 47, 39, 31, 26],
+                bookingTrend: [38, 45, 42, 48, 39, 43, 52],
+                bookingStatus: [251, 36, 8],
+                newUsers: [15, 22, 18, 25, 19, 21, 28],
+                dailyRevenue: [89500000, 95200000, 87300000, 102400000, 91800000, 94600000, 108700000]
+            },
+            90: {
+                totalSchedules: 45,
+                totalBookings: 3741,
+                confirmedBookings: 3267,
+                cancelledBookings: 474,
+                pendingRefunds: 69,
+                totalRevenue: 8542500000,
+                popularRoutes: ['Jakarta - Bandung', 'Jakarta - Yogyakarta', 'Surabaya - Malang', 'Bandung - Semarang', 'Jakarta - Solo'],
+                popularRoutesData: [735, 594, 501, 402, 336],
+                bookingTrend: [], // Will be generated
+                bookingStatus: [3267, 474, 69],
+                newUsers: [], // Will be generated
+                dailyRevenue: [] // Will be generated
+            },
+            365: {
+                totalSchedules: 45,
+                totalBookings: 15247,
+                confirmedBookings: 13321,
+                cancelledBookings: 1926,
+                pendingRefunds: 278,
+                totalRevenue: 34847500000,
+                popularRoutes: ['Jakarta - Bandung', 'Jakarta - Yogyakarta', 'Surabaya - Malang', 'Bandung - Semarang', 'Jakarta - Solo'],
+                popularRoutesData: [2999, 2438, 2041, 1640, 1371],
+                bookingTrend: [], // Will be generated
+                bookingStatus: [13321, 1926, 278],
+                newUsers: [], // Will be generated
+                dailyRevenue: [] // Will be generated
+            }
+        };
+
+        let currentPeriod = 30;
+
+        // Generate daily revenue data for different periods
+        function generateRevenueData(days, baseAmount, variance) {
+            const data = [];
+            for (let i = 0; i < days; i++) {
+                const revenue = baseAmount + Math.random() * variance;
+                data.push(Math.floor(revenue));
+            }
+            return data;
+        }
+
+        // Generate data for 30 days
+        dashboardData[30].dailyRevenue = generateRevenueData(30, 80000000, 40000000);
+        
+        // Generate data for 90 days
+        dashboardData[90].bookingTrend = generateRevenueData(90, 35, 25).map(val => Math.floor(val / 1000000));
+        dashboardData[90].newUsers = generateRevenueData(90, 18, 15).map(val => Math.floor(val / 1000000));
+        dashboardData[90].dailyRevenue = generateRevenueData(90, 85000000, 45000000);
+        
+        // Generate data for 365 days
+        dashboardData[365].bookingTrend = generateRevenueData(365, 38, 28).map(val => Math.floor(val / 1000000));
+        dashboardData[365].newUsers = generateRevenueData(365, 20, 18).map(val => Math.floor(val / 1000000));
+        dashboardData[365].dailyRevenue = generateRevenueData(365, 90000000, 50000000);
+
+        // Chart instances
+        let charts = {};
+
+        // Generate date labels
+        function generateDateLabels(days) {
+            const labels = [];
+            for (let i = days - 1; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                labels.push(date.getDate() + '/' + (date.getMonth() + 1));
+            }
+            return labels;
+        }
+
+        // Initialize charts
+        function initializeCharts() {
+            const currentData = dashboardData[currentPeriod];
+            const dateLabels = generateDateLabels(currentPeriod);
+
+            // Popular Schedules Chart
+            const popularCtx = document.getElementById('popularSchedulesChart').getContext('2d');
+            charts.popular = new Chart(popularCtx, {
+                type: 'bar',
+                data: {
+                    labels: currentData.popularRoutes,
+                    datasets: [{
+                        label: 'Jumlah Booking',
+                        data: currentData.popularRoutesData,
+                        backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Booking Trend Chart
+            const trendCtx = document.getElementById('bookingTrendChart').getContext('2d');
+            charts.trend = new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: dateLabels,
+                    datasets: [{
+                        label: 'Booking Harian',
+                        data: currentData.bookingTrend,
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Booking Status Chart
+            const statusCtx = document.getElementById('bookingStatusChart').getContext('2d');
+            charts.status = new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Dikonfirmasi', 'Dibatalkan', 'Pending'],
+                    datasets: [{
+                        data: currentData.bookingStatus,
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(239, 68, 68, 0.8)',
+                            'rgba(245, 158, 11, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(16, 185, 129, 1)',
+                            'rgba(239, 68, 68, 1)',
+                            'rgba(245, 158, 11, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // New Users Chart
+            const usersCtx = document.getElementById('newUsersChart').getContext('2d');
+            charts.users = new Chart(usersCtx, {
+                type: 'bar',
+                data: {
+                    labels: dateLabels,
+                    datasets: [{
+                        label: 'Pengguna Baru',
+                        data: currentData.newUsers,
+                        backgroundColor: 'rgba(147, 51, 234, 0.8)',
+                        borderColor: 'rgba(147, 51, 234, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            charts.revenue = new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: dateLabels,
+                    datasets: [{
+                        label: 'Pendapatan Harian (Rp)',
+                        data: currentData.dailyRevenue,
+                        borderColor: 'rgba(147, 51, 234, 1)',
+                        backgroundColor: 'rgba(147, 51, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'Rp ' + (value / 1000000).toFixed(0) + 'M';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Update dashboard data
+        function updateDashboard() {
+            const currentData = dashboardData[currentPeriod];
+            
+            document.getElementById('totalSchedules').textContent = currentData.totalSchedules.toLocaleString('id-ID');
+            document.getElementById('totalBookings').textContent = currentData.totalBookings.toLocaleString('id-ID');
+            document.getElementById('confirmedBookings').textContent = currentData.confirmedBookings.toLocaleString('id-ID');
+            document.getElementById('cancelledBookings').textContent = currentData.cancelledBookings.toLocaleString('id-ID');
+            document.getElementById('pendingRefunds').textContent = currentData.pendingRefunds.toLocaleString('id-ID');
+            document.getElementById('totalRevenue').textContent = formatCurrency(currentData.totalRevenue);
+
+            // Update summary
+            const avgBooking = (currentData.totalBookings / currentPeriod).toFixed(1);
+            const occupancyRate = ((currentData.confirmedBookings / currentData.totalBookings) * 100).toFixed(1);
+            const avgRevenue = (currentData.totalRevenue / currentData.confirmedBookings);
+
+            document.getElementById('avgBookingPerDay').textContent = avgBooking;
+            document.getElementById('occupancyRate').textContent = occupancyRate + '%';
+            document.getElementById('avgRevenuePerBooking').textContent = formatCurrency(avgRevenue);
+        }
+
+        // Update charts with new data
+        function updateCharts() {
+            const currentData = dashboardData[currentPeriod];
+            const dateLabels = generateDateLabels(currentPeriod);
+
+            // Update Popular Schedules Chart
+            charts.popular.data.labels = currentData.popularRoutes;
+            charts.popular.data.datasets[0].data = currentData.popularRoutesData;
+            charts.popular.update();
+
+            // Update Booking Trend Chart
+            charts.trend.data.labels = dateLabels;
+            charts.trend.data.datasets[0].data = currentData.bookingTrend;
+            charts.trend.update();
+
+            // Update Booking Status Chart
+            charts.status.data.datasets[0].data = currentData.bookingStatus;
+            charts.status.update();
+
+            // Update New Users Chart
+            charts.users.data.labels = dateLabels;
+            charts.users.data.datasets[0].data = currentData.newUsers;
+            charts.users.update();
+
+            // Update Revenue Chart
+            charts.revenue.data.labels = dateLabels;
+            charts.revenue.data.datasets[0].data = currentData.dailyRevenue;
+            charts.revenue.update();
+        }
+
+        // Render function for Element SDK
+        async function render(config) {
+            document.getElementById('dashboard-title').textContent = config.dashboard_title || defaultConfig.dashboard_title;
+            document.getElementById('company-name').textContent = config.company_name || defaultConfig.company_name;
+        }
+
+        // Element SDK implementation
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig: defaultConfig,
+                render: render,
+                mapToCapabilities: (config) => ({
+                    recolorables: [],
+                    borderables: [],
+                    fontEditable: undefined,
+                    fontSizeable: undefined
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["dashboard_title", config.dashboard_title || defaultConfig.dashboard_title],
+                    ["company_name", config.company_name || defaultConfig.company_name]
+                ])
+            });
+        }
+
+        // Event listeners
+        document.getElementById('timeFilter').addEventListener('change', function() {
+            // Update current period and refresh dashboard
+            currentPeriod = parseInt(this.value);
+            updateDashboard();
+            updateCharts();
+        });
+
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            // Simulate data refresh
+            this.style.transform = 'rotate(360deg)';
+            setTimeout(() => {
+                this.style.transform = 'rotate(0deg)';
+                updateDashboard();
+            }, 500);
+        });
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDashboard();
+            initializeCharts();
+            
+            // Initial render
+            if (window.elementSdk && window.elementSdk.config) {
+                render(window.elementSdk.config);
+            } else {
+                render(defaultConfig);
+            }
+        });
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98fdeaaba045a2f5',t:'MTc2MDY4NDQwMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

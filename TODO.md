@@ -1,0 +1,1 @@
+- [x] Create syarat.php as a modal popup page with X button to close, displaying Syarat & Ketentuan GlobeTix

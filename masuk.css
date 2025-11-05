@@ -1,0 +1,89 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #2e6e8e;
+  color: #fff;
+}
+
+/* NAVBAR (logo di tengah, tanpa tombol) */
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 40px;
+  background: #fff;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #004c75;
+}
+.logo img {
+  height: 45px;
+  margin-right: 8px;
+}
+.logo span {
+  color: #000;
+}
+
+/* FORM CONTAINER */
+.form-container {
+  background: #2e6e8e;
+  padding: 40px;
+  border-radius: 6px;
+  max-width: 500px;
+  margin: 50px auto;
+}
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* INPUT */
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 30px;
+  border: none;
+  font-size: 15px;
+  background: #fdfdf8;
+  color: #333;
+}
+.form-group input:focus {
+  outline: 2px solid #ffa726;
+}
+
+/* BUTTON */
+.btn-primary {
+  width: 100%;
+  background: #ffa726;
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  background: #ff9800;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #fff;
+}
