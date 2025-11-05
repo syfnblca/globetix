@@ -113,23 +113,25 @@ foreach ($bookings as $b) {
     }
 }
 
-// check expired lock: if expired, cancel booking and release seats
+// check expired lock: if expired, cancel all bookings and release seats
 if (!is_null($data['seat_locked_until']) && strtotime($data['seat_locked_until']) < time()) {
-    // transactionally cancel and release seats
+    // transactionally cancel all bookings and release seats
     $conn->begin_transaction();
     try {
-        $upd = $conn->prepare("UPDATE booking SET status_booking = 'cancelled' WHERE booking_id = ?");
-        $upd->bind_param("i", $booking_id);
-        $upd->execute();
+        foreach ($booking_ids as $bid) {
+            $upd = $conn->prepare("UPDATE booking SET status_booking = 'cancelled' WHERE booking_id = ?");
+            $upd->bind_param("i", $bid);
+            $upd->execute();
 
-        $rel = $conn->prepare("
-            UPDATE kursi k
-            JOIN booking_seat bs ON k.seat_id = bs.seat_id
-            SET k.status = 'tersedia', k.locked_until = NULL
-            WHERE bs.booking_id = ?
-        ");
-        $rel->bind_param("i", $booking_id);
-        $rel->execute();
+            $rel = $conn->prepare("
+                UPDATE kursi k
+                JOIN booking_seat bs ON k.seat_id = bs.seat_id
+                SET k.status = 'tersedia', k.locked_until = NULL
+                WHERE bs.booking_id = ?
+            ");
+            $rel->bind_param("i", $bid);
+            $rel->execute();
+        }
 
         $conn->commit();
     } catch (Exception $ex) {
@@ -137,7 +139,7 @@ if (!is_null($data['seat_locked_until']) && strtotime($data['seat_locked_until']
         abort_alert('Gagal memproses timeout booking. Silakan coba lagi.', 'dashboard.php');
     }
 
-    abort_alert('Waktu pembayaran habis. Booking dibatalkan.', 'dashboard.php');
+    abort_alert('Waktu pembayaran habis. Semua booking dibatalkan.', 'dashboard.php');
 }
 
 // fetch penumpang (read-only) - collect unique passengers from all bookings (avoid duplicates for round-trip)
