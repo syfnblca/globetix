@@ -95,4 +95,4 @@ dan tidak untuk tujuan komersial.
 ---
 
 **📧 Kontak:**  
-Jika mengalami kendala, hubungi admin melalui globetix.msg@gmail.com**.
+Jika mengalami kendala, hubungi admin melalui globetix.msg@gmail.com
