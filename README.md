@@ -28,23 +28,6 @@ Fakultas Teknik – Universitas Negeri Yogyakarta (2025)
 
 ---
 
-## ⚙️ Modul Utama
-
-### 🔐 Autentikasi Pengguna
-- Fitur registrasi, login, auto-login, dan ubah password  
-- Menggunakan **PHPMailer** untuk verifikasi email dan notifikasi pengguna
-
-### 🎫 Pemesanan Tiket
-- Alur: *Cari bus → Pilih kursi → Unggah bukti pembayaran → Lihat status pemesanan*
-
-### 💳 Pembayaran
-- Pengguna dapat mengunggah bukti transfer dan menunggu konfirmasi admin
-
-### 🧑‍💼 Panel Admin
-- Mengelola data bus, jadwal, transaksi, refund, serta laporan penjualan
-
----
-
 ## 🖥️ Teknologi yang Digunakan
 - **Frontend:** HTML, CSS, JavaScript, Bootstrap  
 - **Backend:** PHP Native  
@@ -53,90 +36,80 @@ Fakultas Teknik – Universitas Negeri Yogyakarta (2025)
 - **Email Service:** PHPMailer  
 
 ---
-## 🚀 Cara Menjalankan Proyek
 
-### 1️⃣ Clone Repository
-```bash
-git clone https://github.com/syfnblca/globetix.git
+## 👨‍💻 Login Admin
+- **URL:** `http://localhost/globetix/admin/login.php`  
+- **Username:** `admin`  
+- **Password:** `admin123`
 
-###2️⃣ Import Database
+---
 
-Buka phpMyAdmin
+## 🔗 Link Repository
+- **Front-End / Web App:** [https://github.com/syfnblca/globetix](https://github.com/syfnblca/globetix)
+- **Database API / Backend:** *(jika ada, tambahkan link di sini)*
 
-Buat database baru, misalnya globetix
+---
 
-Import file globetix.sql yang ada di folder utama proyek
+## ⚙️ Modul Sistem
 
-3️⃣ Konfigurasi Database
+### 1️⃣ Modul Autentikasi
+Mengatur login, registrasi, ubah password, dan autologin pengguna.  
+- File: `masuk.php`, `daftar.php`, `autologin.php`, `ubah_password.php`
+- Terintegrasi dengan **PHPMailer** untuk pengiriman notifikasi email.
 
-Buka file db.php
+### 2️⃣ Modul Pemesanan
+Menangani seluruh proses pemesanan tiket dari pencarian hingga pembatalan.  
+- File: `dashboard.php`, `hasil_pencarian.php`, `pilih_kursi.php`, `detail_pemesanan.php`, `batalkan_pemesanan.php`
 
-Sesuaikan dengan kredensial MySQL kamu:
-```bash
-<?php
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db   = "globetix";
-?>
+### 3️⃣ Modul Pembayaran
+Mengelola unggah bukti pembayaran dan konfirmasi oleh admin.  
+- File: `pembayaran.php`, `uploads/`, `admin/pemesanan.php`
 
-4️⃣ Jalankan di Server Lokal
+### 4️⃣ Modul Admin
+Menjadi pusat pengelolaan sistem: data bus, jadwal, pembayaran, refund, dan laporan.  
+- File: `admin/index_admin.php`, `admin/bus.php`, `admin/pemesanan.php`, `admin/refund.php`
 
-Pindahkan folder proyek ke dalam folder htdocs (jika menggunakan XAMPP)
+---
 
-Jalankan Apache dan MySQL melalui XAMPP Control Panel
+## 📄 Panduan Penggunaan Singkat
 
-5️⃣ Akses di Browser
+### 👥 Pengguna
+1. Registrasi dan login melalui `masuk.php`.
+2. Cari tiket bus berdasarkan asal, tujuan, dan tanggal.
+3. Pilih kursi dan unggah bukti pembayaran.
+4. Lihat status transaksi di **riwayat.php**.
+5. Dapatkan bantuan di **bantuan.php**.
 
-User: http://localhost/globetix/landing.php
+### 🛠 Admin
+1. Login ke panel admin (`admin/login.php`).
+2. Kelola jadwal bus dan data transaksi.
+3. Konfirmasi pembayaran dan refund.
+4. Pantau laporan keuangan dan statistik di **index_admin.php**.
 
-Admin: http://localhost/globetix/admin/login.php
+---
 
-6️⃣ Login Admin (Default)
-```bash
-username: admin
-password: admin123
+## 🧰 Teknologi yang Digunakan
+- **Frontend:** HTML, CSS, JavaScript (Bootstrap)
+- **Backend:** PHP Native
+- **Database:** MySQL
+- **Server:** XAMPP / Apache
+- **Email:** PHPMailer
 
-✨ Fitur Utama
+---
 
-Registrasi dan login pengguna
+## 📷 Tampilan Utama
+- Dashboard User: pencarian tiket dan jadwal.
+- Riwayat Pemesanan: daftar tiket & status transaksi.
+- Profil Pengguna: ubah data & password.
+- Dashboard Admin: statistik booking dan laporan refund.
 
-Autologin otomatis
+---
 
-Pencarian jadwal bus berdasarkan rute dan tanggal
+## 🧾 Lisensi
+Proyek ini dikembangkan untuk keperluan akademik di **Universitas Negeri Yogyakarta**  
+dan tidak untuk tujuan komersial.
 
-Pemilihan kursi interaktif
+---
 
-Upload bukti pembayaran
-
-Riwayat pemesanan pengguna
-
-Pengelolaan bus, jadwal, transaksi, dan refund oleh admin
-
-Dashboard admin dengan laporan transaksi
-
-🧩 Pengembangan Selanjutnya
-
-Integrasi dengan API pembayaran online
-
-Fitur notifikasi real-time (email & SMS)
-
-Peningkatan desain UI/UX
-
-Penambahan filter pencarian lanjutan
-
-Dukungan multi-kota dan multi-operator
-
-📄 Lisensi
-
-Proyek ini dibuat untuk keperluan akademik di Universitas Negeri Yogyakarta.
-Dilarang digunakan untuk kepentingan komersial tanpa izin dari pengembang.
-
-📬 Kontak
-
-Jika ada pertanyaan, bug, atau ingin berkontribusi, silakan hubungi:
-📧 globetix.msg@gmail.com
-
-🌐 https://github.com/syfnblca/globetix
-
-⭐ Dukung proyek ini dengan memberi bintang (⭐) di repositori jika kamu merasa GlobeTix bermanfaat!
+**📧 Kontak:**  
+Jika mengalami kendala, hubungi admin melalui globetix.msg@gmail.com
