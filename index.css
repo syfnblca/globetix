@@ -87,6 +87,34 @@ header {
   font-weight: bold;
 }
 
+/* CAROUSEL */
+.carousel {
+  max-width: 900px;
+  margin: 20px auto 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.carousel-container {
+  display: flex;
+  gap: 10px;
+}
+
+.carousel-slide {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
 /* SEARCH BOX */
 .search-box {
   background: #fff;
