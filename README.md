@@ -53,15 +53,13 @@ Fakultas Teknik – Universitas Negeri Yogyakarta (2025)
 - **Email Service:** PHPMailer  
 
 ---
-
-## 🚀 Cara Menjalankan Proyek
-
 ## 🚀 Cara Menjalankan Proyek
 
 ### 1️⃣ Clone Repository
 ```bash
 git clone https://github.com/syfnblca/globetix.git
 2️⃣ Import Database
+
 Buka phpMyAdmin
 
 Buat database baru, misalnya globetix
@@ -69,32 +67,36 @@ Buat database baru, misalnya globetix
 Import file globetix.sql yang ada di folder utama proyek
 
 3️⃣ Konfigurasi Database
+
 Buka file db.php
 
 Sesuaikan dengan kredensial MySQL kamu:
 
-php
-Salin kode
+<?php
 $host = "localhost";
 $user = "root";
 $pass = "";
 $db   = "globetix";
-4️⃣ Jalankan di Server Lokal
-Pindahkan folder proyek ke dalam htdocs (jika menggunakan XAMPP)
+?>
 
-Jalankan Apache dan MySQL di XAMPP Control Panel
+4️⃣ Jalankan di Server Lokal
+
+Pindahkan folder proyek ke dalam folder htdocs (jika menggunakan XAMPP)
+
+Jalankan Apache dan MySQL melalui XAMPP Control Panel
 
 5️⃣ Akses di Browser
+
 User: http://localhost/globetix/landing.php
 
 Admin: http://localhost/globetix/admin/login.php
 
 6️⃣ Login Admin (Default)
-makefile
-Salin kode
 username: admin
 password: admin123
+
 ✨ Fitur Utama
+
 Registrasi dan login pengguna
 
 Autologin otomatis
@@ -112,6 +114,7 @@ Pengelolaan bus, jadwal, transaksi, dan refund oleh admin
 Dashboard admin dengan laporan transaksi
 
 🧩 Pengembangan Selanjutnya
+
 Integrasi dengan API pembayaran online
 
 Fitur notifikasi real-time (email & SMS)
@@ -123,12 +126,15 @@ Penambahan filter pencarian lanjutan
 Dukungan multi-kota dan multi-operator
 
 📄 Lisensi
+
 Proyek ini dibuat untuk keperluan akademik di Universitas Negeri Yogyakarta.
 Dilarang digunakan untuk kepentingan komersial tanpa izin dari pengembang.
 
 📬 Kontak
+
 Jika ada pertanyaan, bug, atau ingin berkontribusi, silakan hubungi:
 📧 globetix.msg@gmail.com
+
 🌐 https://github.com/syfnblca/globetix
 
 ⭐ Dukung proyek ini dengan memberi bintang (⭐) di repositori jika kamu merasa GlobeTix bermanfaat!
