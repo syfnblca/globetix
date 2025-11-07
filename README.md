@@ -58,7 +58,8 @@ Fakultas Teknik – Universitas Negeri Yogyakarta (2025)
 ### 1️⃣ Clone Repository
 ```bash
 git clone https://github.com/syfnblca/globetix.git
-2️⃣ Import Database
+
+###2️⃣ Import Database
 
 Buka phpMyAdmin
 
@@ -71,7 +72,7 @@ Import file globetix.sql yang ada di folder utama proyek
 Buka file db.php
 
 Sesuaikan dengan kredensial MySQL kamu:
-
+```bash
 <?php
 $host = "localhost";
 $user = "root";
@@ -92,6 +93,7 @@ User: http://localhost/globetix/landing.php
 Admin: http://localhost/globetix/admin/login.php
 
 6️⃣ Login Admin (Default)
+```bash
 username: admin
 password: admin123
 
