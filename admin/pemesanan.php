@@ -20,17 +20,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['approve_payment']) &&
     exit;
 }
 
-// Handle disapprove payment
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['disapprove_payment']) && isset($_POST['booking_id'])) {
+// Handle reject payment with reason and email
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reject_payment']) && isset($_POST['booking_id'])) {
     $booking_id = intval($_POST['booking_id']);
-    // Update status pembayaran ke ditolak
-    $update_payment = $conn->prepare("UPDATE pembayaran SET status_pembayaran='ditolak' WHERE booking_id=?");
+    $reason = trim($_POST['reason']);
+    $bukti_tf = null;
+
+    // Handle file upload if provided
+    if (isset($_FILES['bukti_tf']) && $_FILES['bukti_tf']['error'] == 0) {
+        $upload_dir = '../uploads/bukti/';
+        $file_name = 'bukti_reject_' . $booking_id . '_' . time() . '.' . pathinfo($_FILES['bukti_tf']['name'], PATHINFO_EXTENSION);
+        $file_path = $upload_dir . $file_name;
+        if (move_uploaded_file($_FILES['bukti_tf']['tmp_name'], $file_path)) {
+            $bukti_tf = $file_name;
+        }
+    }
+
+    // Update status pembayaran ke gagal
+    $update_payment = $conn->prepare("UPDATE pembayaran SET status_pembayaran='gagal' WHERE booking_id=?");
     $update_payment->bind_param("i", $booking_id);
     $update_payment->execute();
+
     // Update status booking ke cancelled
     $update_booking = $conn->prepare("UPDATE booking SET status_booking='cancelled' WHERE booking_id=?");
     $update_booking->bind_param("i", $booking_id);
     $update_booking->execute();
+
     // Release seats
     $rel = $conn->prepare("
         UPDATE kursi k
@@ -40,7 +55,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['disapprove_payment'])
     ");
     $rel->bind_param("i", $booking_id);
     $rel->execute();
-    echo "<script>alert('Pembayaran berhasil ditolak!'); window.location.href = 'pemesanan.php';</script>";
+
+    // Get buyer email
+    $get_email = $conn->prepare("SELECT pen.email FROM penumpang pen JOIN booking b ON b.booking_id = pen.booking_id WHERE b.booking_id = ? LIMIT 1");
+    $get_email->bind_param("i", $booking_id);
+    $get_email->execute();
+    $email_res = $get_email->get_result();
+    $buyer_email = null;
+    if ($email_res->num_rows > 0) {
+        $row = $email_res->fetch_assoc();
+        $buyer_email = $row['email'];
+    }
+
+    // Send email if email found
+    if ($buyer_email) {
+        require '../PHPMailer/src/Exception.php';
+        require '../PHPMailer/src/PHPMailer.php';
+        require '../PHPMailer/src/SMTP.php';
+
+        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'storyfromabiee@gmail.com';
+            $mail->Password   = 'biathkgvtcdldgxz';
+            $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
+
+            $mail->setFrom('storyfromabiee@gmail.com', 'GlobeTix Support');
+            $mail->addAddress($buyer_email);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Pembayaran Ditolak - GlobeTix';
+            $body = "
+                Halo,<br><br>
+                Maaf, pembayaran Anda untuk booking ID {$booking_id} telah ditolak.<br><br>
+                Alasan penolakan: {$reason}<br><br>
+            ";
+            if ($bukti_tf) {
+                $mail->addAttachment('../uploads/bukti/' . $bukti_tf);
+                $body .= "Bukti transfer ulang telah dilampirkan.<br><br>";
+            }
+            $body .= "
+                Jika ada pertanyaan, silakan hubungi support kami.<br><br>
+                Hormat kami,<br>Tim GlobeTix
+            ";
+            $mail->Body = $body;
+            $mail->AltBody = strip_tags($body);
+
+            $mail->send();
+        } catch (Exception $e) {
+            error_log("Mailer Error: " . $mail->ErrorInfo);
+        }
+    }
+
+    echo "<script>alert('Pembayaran berhasil ditolak dan email dikirim ke pembeli!'); window.location.href = 'pemesanan.php';</script>";
     exit;
 }
 
@@ -284,16 +354,18 @@ while ($row = mysqli_fetch_assoc($res)) {
 .btn-confirm-payment:hover { background-color: #218838; }
 .btn-disapprove-payment {
     display: inline-block;
-    padding: 4px 8px;
+    padding: 6px 12px;
     background-color: #dc3545;
     color: white;
     text-decoration: none;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 600;
     margin-top: 5px;
     margin-left: 5px;
     border: none;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 .btn-disapprove-payment:hover { background-color: #c82333; }
 </style>
@@ -426,7 +498,7 @@ while ($row = mysqli_fetch_assoc($res)) {
                         <input type="hidden" name="booking_id" value="<?= $row['booking_id'] ?>">
                         <button type="submit" name="approve_payment" class="btn-confirm-payment">Approve</button>
                         <?php if (!empty($row['bukti_bayar'])): ?>
-                            <button type="submit" name="disapprove_payment" class="btn-disapprove-payment">Tolak</button>
+                            <button type="button" onclick="openRejectModal(<?= $row['booking_id'] ?>)" class="btn-disapprove-payment">Tolak</button>
                         <?php endif; ?>
                     </form>
                 <?php else: ?>
@@ -449,10 +521,144 @@ while ($row = mysqli_fetch_assoc($res)) {
 </table>
 </div>
 
+<style>
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+    text-align: center;
+}
+
+#rejectForm label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+    font-size: 14px;
+}
+
+#rejectForm textarea,
+#rejectForm input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    transition: border-color 0.3s ease;
+}
+
+#rejectForm textarea:focus,
+#rejectForm input[type="file"]:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+#rejectForm button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#rejectForm button:hover {
+    background-color: #c82333;
+}
+</style>
+
+<!-- Modal for Reject Reason -->
+<div id="rejectModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeRejectModal()">&times;</span>
+        <h3>Alasan Penolakan Pembayaran</h3>
+        <form id="rejectForm" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="booking_id" id="rejectBookingId">
+            <label for="reason">Alasan Penolakan:</label>
+            <textarea name="reason" id="reason" rows="4" required placeholder="Masukkan alasan penolakan..."></textarea>
+            <label for="bukti_tf">Bukti Transfer Ulang (Opsional):</label>
+            <input type="file" name="bukti_tf" id="bukti_tf" accept="image/*,.pdf">
+            <button type="submit" name="reject_payment">Tolak Pembayaran</button>
+        </form>
+    </div>
+</div>
+
 <script>
 function generatePDF() {
     const element = document.getElementById('pdf-content');
     html2pdf().from(element).save('pemesanan.pdf');
+}
+
+function openRejectModal(bookingId) {
+    document.getElementById('rejectBookingId').value = bookingId;
+    document.getElementById('rejectModal').style.display = 'block';
+}
+
+function closeRejectModal() {
+    document.getElementById('rejectModal').style.display = 'none';
+    document.getElementById('rejectForm').reset();
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('rejectModal');
+    if (event.target == modal) {
+        closeRejectModal();
+    }
 }
 </script>
 <?php
