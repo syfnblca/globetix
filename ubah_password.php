@@ -10,19 +10,10 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $lama = $_POST['password_lama'];
     $baru = $_POST['password_baru'];
+    $confirm = $_POST['password_confirm'];
 
-    // Ambil password lama
-    $stmt = $conn->prepare("SELECT password FROM users WHERE user_id = ?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $stmt->bind_result($hashed_password);
-    $stmt->fetch();
-    $stmt->close();
-
-    // Cek apakah password lama cocok
-    if (password_verify($lama, $hashed_password)) {
+    if ($baru === $confirm) {
         $hashed_baru = password_hash($baru, PASSWORD_BCRYPT);
         $update = $conn->prepare("UPDATE users SET password = ? WHERE user_id = ?");
         $update->bind_param("si", $hashed_baru, $user_id);
@@ -34,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         $update->close();
     } else {
-        echo "<script>alert('Password lama salah!'); window.location='ubah_password.php';</script>";
+        echo "<script>alert('Password baru dan konfirmasi tidak cocok!'); window.location='ubah_password.php';</script>";
     }
 }
 $conn->close();
@@ -61,8 +52,8 @@ $conn->close();
     <div class="profile-icon">👤</div>
     <h2>Ubah Password</h2>
     <form method="POST">
-      <input type="password" name="password_lama" placeholder="Kata sandi sebelumnya" required>
       <input type="password" name="password_baru" placeholder="Kata sandi baru" required>
+      <input type="password" name="password_confirm" placeholder="Konfirmasi kata sandi" required>
       <button type="submit" class="btn">Ubah Password</button>
     </form>
   </section>
