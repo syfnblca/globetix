@@ -31,7 +31,7 @@ $max_date_roundtrip = date('Y-m-d', strtotime('+20 days'));
 <head>
   <meta charset="UTF-8">
   <title>GlobeTix Travel Booking</title>
-  <link rel="stylesheet" href="landing.css">
+  <link rel="stylesheet" href="index.css">
 
 </head>
 <body>
