@@ -36,6 +36,16 @@ if ($trip == 'sekali') {
   $penumpang_pulang = intval($_GET['penumpang_pulang'] ?? $penumpang);
 }
 
+// Validate that origin and destination are not the same
+if ($asal == $tujuan) {
+  echo "<script>alert('Asal dan tujuan tidak boleh sama!'); window.location='dashboard.php';</script>";
+  exit;
+}
+if ($trip == 'pp' && $asal_pulang == $tujuan_pulang) {
+  echo "<script>alert('Asal dan tujuan pulang tidak boleh sama!'); window.location='dashboard.php';</script>";
+  exit;
+}
+
 // Validate date restrictions: one-way up to 10 days, round-trip up to 20 days
 $today = date('Y-m-d');
 $max_date_oneway = date('Y-m-d', strtotime('+10 days'));
