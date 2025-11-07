@@ -7,6 +7,6 @@ session_unset();
 session_destroy();
 
 // redirect ke landing page
-header("Location: landing.php");
+header("Location: index.php");
 exit;
 ?>
