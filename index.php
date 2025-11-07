@@ -1,23 +1,22 @@
 <?php
-session_start();
 include 'db.php';
 
-// Jika belum login, arahkan ke halaman login
-if (!isset($_SESSION['user_id'])) {
-  header("Location: masuk.php");
-  exit;
-}
-
-/* Ambil data asal & tujuan langsung dari tabel jadwal */
+/*
+   Ambil data asal & tujuan langsung dari tabel jadwal
+   sesuai struktur database globetix.
+   Kolom: asal | tujuan
+*/
 $cities = [];
 $sql = "SELECT DISTINCT asal, tujuan FROM jadwal";
 $result = $conn->query($sql);
+
 if ($result && $result->num_rows > 0) {
   while ($row = $result->fetch_assoc()) {
     if (!empty($row['asal']))   $cities[] = $row['asal'];
     if (!empty($row['tujuan'])) $cities[] = $row['tujuan'];
   }
 }
+
 $cities = array_unique($cities);
 sort($cities);
 
@@ -31,25 +30,21 @@ $max_date_roundtrip = date('Y-m-d', strtotime('+20 days'));
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard - GlobeTix</title>
-  <link rel="stylesheet" href="dashboard.css">
+  <title>GlobeTix Travel Booking</title>
+  <link rel="stylesheet" href="index.css">
+
 </head>
 <body>
-
-  <!-- NAVBAR -->
   <header>
     <div class="logo">
       <img src="logo.png" alt="GlobeTix Logo">
     </div>
     <div class="nav-buttons">
-      <a href="dashboard.php" class="active">Beranda</a>
-      <a href="riwayat.php">Riwayat</a>
-      <a href="profil.php">Profil</a>
-      <a href="keluar.php" class="btn-daftar">Keluar</a>
+      <a href="masuk.php">Masuk</a>
+      <a href="daftar.php" class="btn-daftar">Daftar</a>
     </div>
   </header>
 
-  <!-- HERO -->
   <section class="hero">
     <h1>Pesan Tiket Online Lebih Cepat, Mudah, dan Real-time!!</h1>
   </section>
@@ -69,7 +64,6 @@ $max_date_roundtrip = date('Y-m-d', strtotime('+20 days'));
     </div>
   </section>
 
-  <!-- FORM PENCARIAN -->
   <section class="search-box">
     <form action="hasil_pencarian.php" method="GET" style="width:100%;display:flex;flex-direction:column;gap:15px;">
       
@@ -224,7 +218,30 @@ $max_date_roundtrip = date('Y-m-d', strtotime('+20 days'));
       }
     });
 
+    // Carousel functionality
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.carousel-slide');
+    const totalSlides = slides.length;
 
+    function showSlide(index) {
+      const container = document.querySelector('.carousel-container');
+      container.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    function changeSlide(direction) {
+      currentSlide += direction;
+      if (currentSlide < 0) {
+        currentSlide = totalSlides - 1;
+      } else if (currentSlide >= totalSlides) {
+        currentSlide = 0;
+      }
+      showSlide(currentSlide);
+    }
+
+    // Auto slide every 3 seconds
+    setInterval(() => {
+      changeSlide(1);
+    }, 3000);
   </script>
 </body>
 </html>

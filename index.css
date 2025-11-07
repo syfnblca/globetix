@@ -7,13 +7,11 @@
 }
 
 body {
-  background: #2e6e8e;
+  background: #2e6e8e; 
   color: #fff;
-  padding-top: 80px;
-  padding-bottom: 80px;
 }
 
-/* NAVBAR */
+/* NAVBAR (untuk landing & dashboard) */
 header {
   display: flex;
   justify-content: space-between;
@@ -21,11 +19,6 @@ header {
   padding: 15px 40px;
   background: #fff;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
 }
 
 .logo {
@@ -35,12 +28,13 @@ header {
   font-weight: bold;
   color: #004c75;
 }
+
 .logo img {
   height: 45px;
   margin-right: 8px;
 }
 
-/* NAVBAR: LANDING (Masuk/Daftar) */
+/* NAVBAR versi LANDING */
 .nav-buttons a {
   margin-left: 20px;
   text-decoration: none;
@@ -48,9 +42,11 @@ header {
   color: #333;
   transition: 0.3s;
 }
+
 .nav-buttons a:hover {
   color: #ffa726;
 }
+
 .nav-buttons .btn-daftar {
   background: #ffa726;
   padding: 8px 16px;
@@ -58,7 +54,7 @@ header {
   color: #fff;
 }
 
-/* NAVBAR: DASHBOARD (Beranda/Riwayat/Profil/Keluar) */
+/* NAVBAR versi DASHBOARD */
 .nav-menu a {
   margin-left: 25px;
   text-decoration: none;
@@ -66,10 +62,12 @@ header {
   color: #333;
   transition: 0.3s;
 }
+
 .nav-menu a:hover,
 .nav-menu a.active {
   color: #ffa726;
 }
+
 .nav-menu .btn-daftar {
   background: #ffa726;
   padding: 8px 16px;
@@ -83,6 +81,7 @@ header {
   padding: 30px 20px;
   color: #fff;
 }
+
 .hero h1 {
   font-size: 22px;
   font-weight: bold;
@@ -130,18 +129,21 @@ header {
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   color: #333;
 }
+
 .form-group {
   flex: 1;
   min-width: 180px;
   display: flex;
   flex-direction: column;
 }
+
 .form-group label {
   font-size: 14px;
   margin-bottom: 5px;
   display: block;
   color: #555;
 }
+
 .form-group input,
 .form-group select {
   width: 100%;
@@ -149,24 +151,20 @@ header {
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 15px;
-  outline: none;
-  transition: border-color 0.3s;
-}
-.form-group input:focus,
-.form-group select:focus {
-  border-color: #2e6e8e;
 }
 
-/* TOMBOL PILIH TRIP */
+/* TRIP TYPE */
 .trip-type {
   display: flex;
   justify-content: center;
   gap: 15px;
   margin-top: 10px;
 }
+
 .trip-type input {
   display: none;
 }
+
 .trip-type label {
   background: #eee;
   padding: 8px 16px;
@@ -174,10 +172,10 @@ header {
   cursor: pointer;
   transition: 0.3s;
 }
+
 .trip-type input:checked + label {
   background: #2e6e8e;
   color: #fff;
-  box-shadow: 0 0 6px rgba(0,0,0,0.15);
 }
 
 /* FORM ROW (Pergi & Pulang) */
@@ -194,7 +192,7 @@ header {
   box-shadow: 0 3px 6px rgba(0,0,0,0.05);
 }
 
-/* SWAP ICON (↔) */
+/* SWAP ICON ↔ */
 .swap-icon {
   font-size: 26px;
   color: #ffa726;
@@ -202,20 +200,22 @@ header {
   user-select: none;
   transition: transform 0.3s;
 }
+
 .swap-icon:hover {
   transform: rotate(180deg);
 }
+
 .swap-icon.disabled {
   opacity: 0.4;
   cursor: default;
 }
 
-/* TOMBOL CARI */
+/* BUTTON */
 .btn-cari {
   background: #ffa726;
   color: #fff;
   border: none;
-  padding: 14px 20px;
+  padding: 12px 20px;
   border-radius: 10px;
   font-size: 16px;
   font-weight: bold;
@@ -223,15 +223,10 @@ header {
   width: 100%;
   transition: background 0.3s, transform 0.2s;
 }
+
 .btn-cari:hover {
   background: #e69520;
   transform: translateY(-2px);
-}
-
-/* ANIMASI UNTUK TANGGAL PULANG */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 /* FOOTER */
@@ -239,16 +234,14 @@ footer {
   background: #2e6e8e;
   color: #fff;
   padding: 20px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
+  margin-top: 40px;
   text-align: center;
 }
+
 footer .links {
   margin-bottom: 10px;
 }
+
 footer .links a {
   margin: 0 10px;
   color: #fff;
@@ -258,6 +251,7 @@ footer .links a {
   border-radius: 12px;
   transition: 0.3s;
 }
+
 footer .links a:hover {
   background: #2e6e8e;
   border: 1px solid #fff;
@@ -269,79 +263,83 @@ footer .links a:hover {
     flex-direction: column;
     text-align: center;
   }
-  .nav-buttons,
-  .nav-menu {
+
+  .nav-buttons, .nav-menu {
     margin-top: 10px;
   }
-  .search-box {
-    padding: 15px;
+
+  .form-row {
+    flex-direction: column;
   }
-  .form-group {
-    min-width: 100%;
+
+  .swap-icon {
+    align-self: center;
   }
+
   .btn-cari {
     font-size: 15px;
     padding: 12px;
   }
-  .search-top {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    flex-wrap: wrap;
-    width: 100%;
-    margin-bottom: 5px;
-  }
+     .search-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      width: 100%;
+    }
 
-  .trip-type {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
-  .trip-type input { display: none; }
-  .trip-type label {
-    background: #eee;
-    padding: 8px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  .trip-type input:checked + label {
-    background: #2e6e8e;
-    color: #fff;
-  }
+    .trip-type {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-left: auto;
+    }
 
-  .form-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: flex-end;
-    background: #fff;
-    border-radius: 16px;
-    padding: 15px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  }
+    .trip-type input { display: none; }
+    .trip-type label {
+      background: #eee;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .trip-type input:checked + label {
+      background: #2e6e8e;
+      color: #fff;
+    }
 
-  .swap-icon {
-    font-size: 22px;
-    color: #ffa726;
-    cursor: pointer;
-    user-select: none;
-    transition: transform 0.3s;
-    align-self: flex-end;
-  }
-  .swap-icon:hover { transform: rotate(180deg); }
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-end;
+      background: #fff;
+      border-radius: 16px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
 
-  #formPulang {
-    display: none;
-    animation: fadeIn 0.3s ease-in-out;
-  }
+    .swap-icon {
+      font-size: 22px;
+      color: #ffa726;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.3s;
+      align-self: flex-end;
+    }
+    .swap-icon:hover { transform: rotate(180deg); }
 
-  .btn-cari { margin-top: 10px; }
+    #formPulang {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
 
-  header .nav-buttons a.active {
-    background: #fff;
-    color: #2e6e8e;
-    border-radius: 8px;
-    padding: 6px 10px;
-  }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn-cari {
+      margin-top: 10px;
+    }
 }
