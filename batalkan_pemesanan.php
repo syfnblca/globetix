@@ -85,8 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
                     $mail->Port       = 587;
 
-                    $mail->setFrom('globetix.msg@gmail.com', 'Globetix MSG');
-                    $mail->addAddress('globetix.msg@gmail.com');
+                    $mail->setFrom('storyfromabiee@gmail.com@gmail.com', 'Globetix MSG');
+                    $mail->addAddress('storyfromabiee@gmail.com@gmail.com');
 
                     $mail->isHTML(true);
                     $mail->Subject = 'Request Pembatalan Booking - ' . $kode_booking;
