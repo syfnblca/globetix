@@ -49,6 +49,21 @@ $max_date_roundtrip = date('Y-m-d', strtotime('+20 days'));
     <h1>Pesan Tiket Online Lebih Cepat, Mudah, dan Real-time!!</h1>
   </section>
 
+  <!-- CAROUSEL -->
+  <section class="carousel">
+    <div class="carousel-container">
+      <div class="carousel-slide">
+        <img src="bus (1).jpg" alt="Bus 1">
+      </div>
+      <div class="carousel-slide">
+        <img src="bus (2).jpg" alt="Bus 2">
+      </div>
+      <div class="carousel-slide">
+        <img src="bus (3).jpg" alt="Bus 3">
+      </div>
+    </div>
+  </section>
+
   <section class="search-box">
     <form action="hasil_pencarian.php" method="GET" style="width:100%;display:flex;flex-direction:column;gap:15px;">
       
@@ -202,6 +217,7 @@ $max_date_roundtrip = date('Y-m-d', strtotime('+20 days'));
         tujuanPulang.value = asalPergi.value;
       }
     });
+
   </script>
 </body>
 </html>
