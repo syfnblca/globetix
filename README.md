@@ -104,7 +104,6 @@ dan **tidak untuk tujuan komersial**.
 
 ## 🔗 Link Repository
 - 🌐 **Web App:** [https://github.com/syfnblca/globetix](https://github.com/syfnblca/globetix)  
-- ⚙️ **Database / API Backend:** *(tambahkan link jika tersedia)*
 
 ---
 
